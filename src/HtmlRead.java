@@ -4,9 +4,7 @@ import java.net.URL;
 
 public class HtmlRead {
 
-    public static void main(String[] args) {
-        HtmlRead html = new HtmlRead();
-    }
+
 
     public HtmlRead() {
 
@@ -22,8 +20,10 @@ public class HtmlRead {
 
             while( (line = reader.readLine()) != null )  {
 
-                if(line.contains("https")) {
-                    int start = line.indexOf("https");
+                if(line.contains("href")) {
+
+                    int start = line.indexOf("href") +6;
+
                    // System.out.println(line);
                     String link = line.substring(start);
                     //int end = line.indexOf("\"");
@@ -36,7 +36,6 @@ public class HtmlRead {
                     if (end==-1){
                         end = link.indexOf("--");
                     }
-
 
 
 
