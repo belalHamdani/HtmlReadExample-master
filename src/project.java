@@ -9,6 +9,7 @@ import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.sql.SQLOutput;
 
 
 import javax.swing.*;
@@ -16,11 +17,14 @@ import javax.swing.*;
 
 public class project implements ActionListener {
     private JFrame mainFrame;
+    private JPanel controlPanel;
     private JLabel statusLabel;
+    public JScrollPane scrollPane;
     private JMenuItem cut, copy, paste, selectAll;
     private JTextArea ta; //typing area
     public JTextArea tya;
     public JTextArea po;
+
     private int WIDTH=800;
     private int HEIGHT=700;
 
@@ -39,9 +43,9 @@ public class project implements ActionListener {
         mainFrame.setSize(WIDTH, HEIGHT);
         mainFrame.setLayout(new GridLayout(2,2));
 
-        ta =new JTextArea("one");
-        tya=new JTextArea("input link");
-        po=new JTextArea("three");
+        ta =new JTextArea();
+        tya=new JTextArea();
+        po=new JTextArea();
 
         statusLabel = new JLabel("Label", JLabel.CENTER);
         statusLabel.setSize(350, 100);
@@ -57,6 +61,11 @@ public class project implements ActionListener {
 
 
         //end menu at top
+         scrollPane = new JScrollPane(ta);
+        controlPanel = new JPanel();
+        controlPanel.setLayout(new BorderLayout());
+        mainFrame.add(controlPanel);
+       // .add(scrollPane);
 
 
 
@@ -74,14 +83,22 @@ public class project implements ActionListener {
     private void showEventDemo() {
 
         JButton StartButton = new JButton("Start");
-
+        JButton ResetButton = new JButton("Reset");
+        JLabel WelcLabel = new JLabel("Welcome to Belal's HTML Reader, #1 link reader in the country");
 
         StartButton.setActionCommand("Start");
         StartButton.addActionListener(new ButtonClickListener());
 
+        ResetButton.setActionCommand("Reset");
+        ResetButton.addActionListener(new ButtonClickListener());
 
-        mainFrame.add(StartButton, BorderLayout.SOUTH);
-        mainFrame.add(ta);
+
+      //  mainFrame.add(StartButton, BorderLayout.SOUTH);
+       // mainFrame.add(ResetButton, BorderLayout.EAST);
+        controlPanel.add(StartButton, BorderLayout.NORTH);
+        controlPanel.add(ResetButton, BorderLayout.SOUTH);
+        controlPanel.add(WelcLabel, BorderLayout.CENTER );
+        mainFrame.add(scrollPane);
         mainFrame.add(tya);
         mainFrame.add(po);
 
@@ -111,7 +128,8 @@ public class project implements ActionListener {
                 try {
                     System.out.println();
                     System.out.print("hello \n");
-                    URL url = new URL("https://www.milton.edu/");
+                 //   URL url = new URL("https://www.milton.edu/");
+                    URL url = new URL(tya.getText());
                     BufferedReader reader = new BufferedReader(
                             new InputStreamReader(url.openStream())
                     );
@@ -137,21 +155,37 @@ public class project implements ActionListener {
                                 end = link.indexOf("--");
                             }
 
+                            String x = po.getText();
+                            //System.out.println(line.substring(start, start+end));
+                            //System.out.println(x);
+                            // System.out.println(start + ","+end);
+                            if (line.substring(start, start+end).contains(x)){
+                                System.out.print(line.substring(start, start+end)+ "\n");
+                                ta.append(line.substring(start, start+end)+"\n");
+                                System.out.println(tya.getText());
 
-                           // System.out.println(start + ","+end);
-                            System.out.print(line.substring(start, start+end)+ "\n");
-                            ta.append(line.substring(start, start+end)+"\n");
-                            System.out.println(tya.getText());
+
+
+                                }
+                            }
+
+
 
                         }
 
-                    }
+
                     reader.close();
                 } catch(Exception ex) {
                     System.out.println(ex);
                     System.out.println("double check your url and start again");
+                    ta.append("double check your url and start again ");
                 }
 
+            }
+            if (command.equals("Reset")) {
+                ta.setText(null);
+                tya.setText(null);
+                po.setText(null);
             }
 
 
